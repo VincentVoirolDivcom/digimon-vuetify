@@ -1,0 +1,57 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+// @use 'vuetify/settings' with (
+//   $color-pack: false
+// );
+
+
+/* Animation pour une puce ou bouton sélectionné */
+@keyframes selectAnimation {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  25% {
+    transform: scale(1.1) translateX(-2px);
+  }
+  50% {
+    transform: scale(1.2) translateX(2px);
+  }
+  75% {
+    transform: scale(1.1) translateX(-2px);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+/* Animation pour style battement de coeur */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.5);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(2);
+  }
+}
+/* Animation style rétrécissement */
+@keyframes shrink {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
