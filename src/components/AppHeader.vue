@@ -16,15 +16,16 @@
         * size="64" définit la taille de l'avatar
         * @click redirige vers la page d'accueil
       -->
-      <v-avatar
-        class="mr-4 pa-0 cursor-pointer"
-        image="@/assets/pokeball.svg"
-        size="64"
-        @click="$router.push('/')"
-      />
+      <div class="d-flex align-center w-25">
+        <v-img
+          class="cursor-pointer mr-2"
+          src="@/assets/Digimon_Logo(1).svg"
+          @click="$router.push('/')"
+        />
 
-      <!-- Titre de l'application affiché dans la barre -->
-      <v-toolbar-title>Pokédex</v-toolbar-title>
+        <!-- Titre de l'application affiché dans la barre -->
+        <v-toolbar-title>Digidex</v-toolbar-title>
+      </div>
 
       <!--
       Liens de navigation générés dynamiquement
@@ -52,7 +53,7 @@ Définition des éléments de menu pour la navigation
     * icon : l'icône du lien
 */
 const menuItems = [
-  { title: 'Accueil', path: '/', icon: 'mdi-pokeball' },
+  // { title: 'Accueil', path: '/', icon: 'mdi-digimon_logo' },
   // Ajouter ici les autres liens du menu.
   // Vous trouverez des icônes sur https://pictogrammers.com/library/mdi/
   // N'oubliez pas d'ajouter le préfixe 'mdi-' devant le nom de l'icône.

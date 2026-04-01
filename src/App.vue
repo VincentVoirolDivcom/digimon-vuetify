@@ -29,9 +29,10 @@
         - class="text-center" : Centre le texte horizontalement.
         - class="w-100" : Assure que le conteneur occupe toute la largeur disponible.
     -->
+    <!-- TODO: Remplacer le footer -->
     <v-footer>
       <div class="px-4 text-center w-100">
-        2025 - Pokédex
+        2025 - Digidex
       </div>
     </v-footer>
   </v-app>

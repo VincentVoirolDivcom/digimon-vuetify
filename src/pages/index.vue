@@ -8,9 +8,9 @@
       * my-6 ajoute une marge verticale de 6 unités
     -->
     <h1 class="text-h3 text-center my-6">
-      Pokédex
+      Digidex
     </h1>
-    <!-- TODO: Afficher les Pokémon ici -->
+    <!-- TODO: Afficher les Digimons ici -->
   </v-container>
 </template>
 
