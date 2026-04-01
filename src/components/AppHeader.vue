@@ -19,7 +19,7 @@
       <div class="d-flex align-center w-25">
         <v-img
           class="cursor-pointer mr-2"
-          src="@/assets/Digimon_Logo(1).svg"
+          src="@/assets/digimon_logo.svg"
           @click="$router.push('/')"
         />
 
