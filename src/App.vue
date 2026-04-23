@@ -41,4 +41,12 @@
 <script setup>
 // Importation du composant AppHeader pour l'en-tête de l'application
 import AppHeader from '@/components/AppHeader.vue'
+
+// Représente le magasin
+import { useDigimonStore } from "@/stores/digimonStore";
+
+onMounted(async() => {
+  const digimonStore = useDigimonStore();
+  await digimonStore.init();
+})
 </script>
