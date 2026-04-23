@@ -10,10 +10,29 @@
     <h1 class="text-h3 text-center my-6">
       Digidex
     </h1>
-    <!-- TODO: Afficher les Digimons ici -->
+    <!-- Grille des Digimons -->
+    <v-row>
+      <v-col
+        v-for="digimon in digimons"
+        :key="digimon.id"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
+        <digimon-card :digimon="digimon" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
 // Vos scripts ou imports ici
+import DigimonCard from "@/components/DigimonCard.vue";
+import { storeToRefs } from 'pinia';
+import { useDigimonStore } from "@/stores/digimonStore";
+
+const digimonStore = useDigimonStore()
+
+const { digimons } = storeToRefs(digimonStore)
 </script>
