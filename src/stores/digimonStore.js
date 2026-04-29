@@ -11,7 +11,14 @@ export const useDigimonStore = defineStore('digimon', {
     isLoading: false,
     error: null,
   }),
-  getters: {},
+  getters: {
+    totalDigimons: (state) => state.digimons.length,
+    getDigimonById: (state) => {
+      return (digimonId) => {
+        return state.digimons.find(d => d.id === digimonId)
+      }
+    },
+  },
   actions: {
     /**
      * Charge les 20 premiers Digimons
@@ -42,13 +49,17 @@ export const useDigimonStore = defineStore('digimon', {
       try {
         const response = await api.get(`/level`)
         const datas = await response.data
+
+        // Reprendre les données de pagination pour calculer le nombre total de pages à parcourir
         const totalElements = datas.pageable.totalElements
         const elementsOnCurrentPage = datas.pageable.elementsOnPage
+
         // Calculer le nombre d'itérations pour avoir la totalité des données des niveaux des Digimons
         const nbPages = Math.ceil(totalElements / elementsOnCurrentPage)
 
         let allLevels = datas.content.fields
 
+        // Itérer sur toutes les pages des niveaux pour avoir toutes les données
         for (let page = 1; page < nbPages; page++) {
           const nextRes  = await api.get(`/level?page=${page}`)
           const nextData = await nextRes.data
