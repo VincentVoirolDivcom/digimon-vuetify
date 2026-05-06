@@ -31,6 +31,12 @@ export const useDigimonStore = defineStore('digimon', {
         const response = await api.get(`/digimon?pageSize=${PAGE_SIZE}`)
         const datas = await response.data
 
+        // Assignation du niveau pour chaque digimon présent dans la liste
+        for (const digimon of datas.content) {
+          const digimonLevel = await this.fetchDigimonById(digimon.id)
+          digimon.level = digimonLevel
+        }
+
         this.digimons = datas.content
       } catch (error) {
         console.error('Erreur lors du chargement des Digimons :', error)
@@ -70,6 +76,25 @@ export const useDigimonStore = defineStore('digimon', {
       } catch (error) {
         console.error('Erreur lors du chargement des niveaux :', error)
         this.levels = []
+      } finally {
+        this.isLoading = false
+      }
+    },
+    /**
+     * @param levelId
+     * @returns {Promise<void>}
+     */
+    async fetchDigimonById(digimonId) {
+      this.isLoading = true
+      try {
+        const response = await api.get(`/digimon/${digimonId}`)
+        const levels = response.data.levels
+        const data = levels[0] ? levels[0].level : 'Unknown'
+
+        return data
+      } catch (error) {
+        console.error('Erreur lors du chargement du Digimon :', error)
+        this.error = 'Impossible de charger le Digimon'
       } finally {
         this.isLoading = false
       }
