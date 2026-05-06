@@ -107,7 +107,7 @@ const filteredByLevel = computed(() => {
 const filteredBySearch = computed(() => {
   if (!searchQuery.value) return filteredByLevel.value
 
-  const query = searchQuery.value.toLowerCase();
+  const query = searchQuery.value.toLowerCase()
 
   return filteredByLevel.value.filter(digimon =>
     digimon.name.toLowerCase().includes(query),
