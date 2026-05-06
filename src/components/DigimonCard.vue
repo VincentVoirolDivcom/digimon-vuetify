@@ -12,6 +12,9 @@
     <v-card-title>
       {{ digimon.name }}
     </v-card-title>
+    <v-card-subtitle>
+      Level : {{ digimon.level }}
+    </v-card-subtitle>
   </v-card>
 </template>
 
