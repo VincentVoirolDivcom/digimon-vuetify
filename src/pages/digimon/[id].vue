@@ -1,15 +1,16 @@
 <template>
-  <v-container>
-    <!--  Bouton retour  -->
+  <v-container class="detail-container py-8">
+    <!-- Bouton retour -->
     <v-btn
       variant="text"
       prepend-icon="mdi-arrow-left"
-      class="mb-4"
+      class="mb-6 back-btn"
       @click="$router.back()"
     >
       Return
     </v-btn>
-    <!--  Message d'erreur si aucun Digimon trouvé  -->
+
+    <!-- Message d'erreur -->
     <v-alert
       v-if="!digimon"
       type="error"
@@ -17,81 +18,102 @@
     >
       Digimon not found.
     </v-alert>
-    <!--  Carte du Digimon  -->
-    <v-card>
-      <v-img
-        :src="image"
-        :alt="digimon.name"
-        height="400"
-        contain
-      />
-      <!--   Titre du Digimon   -->
-      <v-card-title class="text-h4 text-center">
-        {{ digimon.name }}
-      </v-card-title>
-      <!--  Description du Digimon   -->
-      <v-card-text class="text-justify">
-        <p v-if="description">
+
+    <div
+      v-if="digimon"
+      class="detail-wrapper"
+    >
+      <!-- Partie gauche : image -->
+      <div class="image-section">
+        <div class="image-glow" />
+        <v-img
+          :src="image"
+          :alt="digimon.name"
+          class="digimon-img"
+          contain
+        />
+      </div>
+
+      <!-- Partie droite : infos -->
+      <div class="info-section">
+        <!-- Nom -->
+        <h1 class="digimon-name">
+          {{ digimon.name }}
+        </h1>
+
+        <!-- Chips niveau / attribut / type -->
+        <div class="chips-row">
+          <v-chip
+            v-if="level"
+            class="stat-chip"
+            label
+          >
+            <v-icon start>
+              mdi-chevron-double-up
+            </v-icon>
+            {{ level }}
+          </v-chip>
+          <v-chip
+            v-if="attribute"
+            class="stat-chip"
+            label
+          >
+            <v-icon start>
+              mdi-atom
+            </v-icon>
+            {{ attribute }}
+          </v-chip>
+          <v-chip
+            v-if="type"
+            class="stat-chip"
+            label
+          >
+            <v-icon start>
+              mdi-dna
+            </v-icon>
+            {{ type }}
+          </v-chip>
+        </div>
+
+        <!-- Séparateur -->
+        <v-divider class="my-4" />
+
+        <!-- Description -->
+        <p
+          v-if="description"
+          class="digimon-description"
+        >
           {{ description }}
         </p>
-      </v-card-text>
-      <!--   Ligne du niveau, attribut et type   -->
-      <v-row justify="center">
-        <v-col
-          v-if="level"
-          cols="2"
-          class="text-center"
+
+        <!-- Séparateur -->
+        <v-divider class="my-4" />
+
+        <!-- Fields -->
+        <div
+          v-if="fields.length > 0"
+          class="fields-section"
         >
-          <h5>Level</h5>
-          <p class="text-body-1 mb-4">
-            {{ level }}
-          </p>
-        </v-col>
-        <v-col
-          v-if="attribute"
-          cols="2"
-          class="text-center"
-        >
-          <h5>Attribute</h5>
-          <p class="text-body-1 mb-4">
-            {{ attribute }}
-          </p>
-        </v-col>
-        <v-col
-          v-if="type"
-          cols="2"
-          class="text-center"
-        >
-          <h5>Type</h5>
-          <p class="text-body-1 mb-4">
-            {{ type }}
-          </p>
-        </v-col>
-      </v-row>
-      <h5 class="text-center">
-        Fields
-      </h5>
-      <!--   Ligne des terrains  -->
-      <v-row
-        v-if="fields"
-        justify="center"
-      >
-        <v-col
-          v-for="field in fields"
-          :key="field.id"
-          cols="2"
-          class="text-center"
-        >
-          <img
-            :src="field.image"
-            :alt="field.field"
-          >
-          <p>
-            {{ field.field }}
-          </p>
-        </v-col>
-      </v-row>
-    </v-card>
+          <h3 class="fields-title">
+            Fields
+          </h3>
+          <div class="fields-grid">
+            <div
+              v-for="field in fields"
+              :key="field.id"
+              class="field-item"
+            >
+              <img
+                :src="field.image"
+                :alt="field.field"
+                class="field-img"
+              >
+              <span class="field-label">{{ field.field }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -130,5 +152,142 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.detail-container {
+  max-width: 1100px;
+}
 
+.back-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.back-btn:hover {
+  opacity: 1;
+}
+
+/* Layout deux colonnes */
+.detail-wrapper {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+/* Colonne image */
+.image-section {
+  position: relative;
+  flex: 0 0 380px;
+}
+
+.image-glow {
+  position: absolute;
+  inset: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--v-theme-primary), 0.25) 0%, transparent 70%);
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.digimon-img {
+  position: relative;
+  z-index: 1;
+  height: 380px;
+  filter: drop-shadow(0 8px 32px rgba(0,0,0,0.25));
+  transition: transform 0.4s ease;
+}
+.digimon-img:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+/* Colonne infos */
+.info-section {
+  flex: 1;
+  padding-top: 16px;
+}
+
+.digimon-name {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+/* Chips */
+.chips-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.stat-chip {
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Description */
+.digimon-description {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  opacity: 0.85;
+  text-align: justify;
+}
+
+/* Fields */
+.fields-title {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  opacity: 0.6;
+  margin-bottom: 16px;
+}
+
+.fields-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.field-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+  transition: transform 0.2s;
+}
+.field-img:hover {
+  transform: scale(1.15);
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.7;
+  text-align: center;
+}
+
+/* Responsive : une colonne sur mobile */
+@media (max-width: 768px) {
+  .detail-wrapper {
+    flex-direction: column;
+  }
+  .image-section {
+    flex: none;
+    width: 100%;
+  }
+  .digimon-img {
+    height: 280px;
+  }
+  .digimon-name {
+    font-size: 2rem;
+  }
+}
 </style>
