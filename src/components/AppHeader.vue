@@ -26,7 +26,7 @@
         <!-- Titre de l'application affiché dans la barre -->
         <v-toolbar-title>Digidex</v-toolbar-title>
       </div>
-
+      <v-spacer />
       <!--
       Liens de navigation générés dynamiquement
         * v-for parcourt chaque élément dans menuItems pour créer un lien de navigation
@@ -53,8 +53,8 @@ Définition des éléments de menu pour la navigation
     * icon : l'icône du lien
 */
 const menuItems = [
-  // { title: 'Accueil', path: '/', icon: 'mdi-digimon_logo' },
-  // Ajouter ici les autres liens du menu.
+  { title: 'Welcome', path: '/', icon: 'mdi-home' },
+  { title: 'Favorites', path: '/favorites', icon: 'mdi-heart' },
   // Vous trouverez des icônes sur https://pictogrammers.com/library/mdi/
   // N'oubliez pas d'ajouter le préfixe 'mdi-' devant le nom de l'icône.
 ]
