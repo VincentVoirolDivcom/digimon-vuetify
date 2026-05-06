@@ -6,20 +6,63 @@ const PAGE_SIZE = 20
 export const useDigimonStore = defineStore('digimon', {
   state: () => ({
     digimons: [],
+    favorites: [],
     levels: [],
     totalPages: 1,
     isLoading: false,
     error: null,
   }),
   getters: {
-    totalDigimons: (state) => state.digimons.length,
-    getDigimonById: (state) => {
+    totalDigimons: state => {
+      return state.digimons.length
+    },
+    totalFavorites: state => {
+      return state.favorites.length
+    },
+    getDigimonById: state => {
       return (digimonId) => {
         return state.digimons.find(d => d.id === digimonId)
       }
     },
+    isFavorite: state => {
+      return digimon => {
+        return state.favorites.includes(digimon.id)
+      }
+    },
+    getFavorites: state => {
+      const favoriteDigimons = state.favorites.map(favoriteId => {
+        return state.digimons.find(digimon => digimon.id === favoriteId)
+      })
+      return favoriteDigimons.filter(digimon => digimon != undefined)
+    },
   },
   actions: {
+    /**
+     *
+     * @returns {Promise<void>}
+     */
+    async init() {
+      console.log('Initialisation du store Digimon...')
+
+      this.isLoading = true
+      this.error = null
+
+      try {
+        // Promise.all exécute les deux requêtes en parallèle
+        // Plus rapide que de les faire l'une après l'autre
+        await Promise.all([
+          this.fetchDigimons(),
+          this.fetchLevels(),
+        ])
+        this.loadFavorites()
+        console.log('Store Digimon initialisé')
+      } catch (error) {
+        this.error = 'Erreur lors du chargement des données'
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+    },
     /**
      * Charge les 20 premiers Digimons
      * @returns {Promise<void>}
@@ -38,6 +81,7 @@ export const useDigimonStore = defineStore('digimon', {
         }
 
         this.digimons = datas.content
+        this.cleanupFavorites()
       } catch (error) {
         console.error('Erreur lors du chargement des Digimons :', error)
         this.error = 'Impossible de charger les Digimons'
@@ -81,7 +125,7 @@ export const useDigimonStore = defineStore('digimon', {
       }
     },
     /**
-     * @param levelId
+     * @param digimonId
      * @returns {Promise<void>}
      */
     async fetchDigimonById(digimonId) {
@@ -100,29 +144,60 @@ export const useDigimonStore = defineStore('digimon', {
       }
     },
     /**
-     *
-     * @returns {Promise<void>}
+     * Charge les favoris depuis localStorage
      */
-    async init() {
-      console.log('Initialisation du store Digimon...')
-
-      this.isLoading = true
-      this.error = null
-
+    loadFavorites() {
       try {
-        // Promise.all exécute les deux requêtes en parallèle
-        // Plus rapide que de les faire l'une après l'autre
-        await Promise.all([
-          this.fetchDigimons(),
-          this.fetchLevels(),
-        ])
-
-        // console.log('Store Digimon initialisé')
+        const savedFavorites = localStorage.getItem('digimon_favorites')
+        if (savedFavorites) {
+          this.favorites = JSON.parse(savedFavorites)
+          console.log('Favoris chargés : ', this.favorites.length, ' éléments')
+        } else {
+          this.favorites = []
+        }
       } catch (error) {
-        this.error = 'Erreur lors du chargement des données'
-        console.error(error)
-      } finally {
-        this.isLoading = false
+        console.log('Erreur lors du chargement des favoris : ', error)
+        this.favorites = []
+      }
+    },
+    /**
+     * Sauvegarde les favoris dans localStorage
+     */
+    saveFavorites() {
+      try {
+        localStorage.setItem('digimon_favorites', JSON.stringify(this.favorites))
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde des favoris :', error)
+      }
+    },
+    /**
+     * Ajoute ou retire un Digimon des favoris
+     * @param digimon
+     */
+    toggleFavorite(digimon) {
+      const favoriteIndex = this.favorites.findIndex(
+        favoriteId => favoriteId === digimon.id,
+      )
+      if (favoriteIndex === -1) {
+        this.favorites.push(digimon.id)
+      } else {
+        this.favorites.splice(favoriteIndex, 1)
+      }
+      this.saveFavorites()
+    },
+    /**
+     * Supprime les favoris dont le Digimon n'existe plus
+     */
+    cleanupFavorites() {
+      const initialCount = this.favorites.length
+      this.favorites = this.favorites.filter(favoriteId => {
+        return this.digimons.some(digimon => digimon.id === favoriteId)
+      })
+
+      const removedCount = initialCount - this.favorites.length
+      if (removedCount > 0) {
+        console.log('Nettoyage : ', removedCount, ' favoris obsolètes supprimés')
+        this.saveFavorites()
       }
     },
   },
