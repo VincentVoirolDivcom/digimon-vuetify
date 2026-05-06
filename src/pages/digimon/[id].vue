@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <!--  Bouton retour  -->
     <v-btn
       variant="text"
       prepend-icon="mdi-arrow-left"
@@ -8,6 +9,15 @@
     >
       Return
     </v-btn>
+    <!--  Message d'erreur si aucun Digimon trouvé  -->
+    <v-alert
+      v-if="!digimon"
+      type="error"
+      variant="tonal"
+    >
+      Digimon not found.
+    </v-alert>
+    <!--  Carte du Digimon  -->
     <v-card>
       <v-img
         :src="image"
@@ -116,7 +126,6 @@ onMounted(async () => {
   attribute.value = digimonDatas.attributes[0].attribute
   type.value = digimonDatas.types[0].type
   fields. value = digimonDatas.fields
-
 })
 </script>
 
